@@ -1,12 +1,13 @@
 import express from "express";
 import compressionRouter from "./routes/compressImageRoutes";
+import morganMiddleware from "./middleware/morgan.middleware";
 
 const app = express();
 const port = 5000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+app.use(morganMiddleware);
 app.get("/", (req, res) => {
   const uptime = process.uptime();
   const time = new Date().toLocaleTimeString();
