@@ -1,11 +1,5 @@
 import sharp from "sharp";
-
-interface ResizeData {
-  image: Express.Multer.File | undefined;
-  width: number;
-  height: number;
-  location: string;
-}
+import { ResizeData } from "../types";
 
 export const resizeImage = async ({
   image,

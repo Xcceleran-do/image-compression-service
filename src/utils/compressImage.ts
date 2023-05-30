@@ -1,10 +1,6 @@
 import sharp from "sharp";
+import { CompressionData } from "../types";
 
-interface CompressionData {
-  image: Express.Multer.File;
-  quality: number;
-  location: string;
-}
 export const compressImage = async ({
   image,
   quality,
