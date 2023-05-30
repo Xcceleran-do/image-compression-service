@@ -1,6 +1,7 @@
 import express from "express";
 import helmet from "helmet";
 
+import { upload } from "./config/multer";
 import compressionRouter from "./routes/compressImageRoutes";
 import morganMiddleware from "./middleware/morgan.middleware";
 import { validateImage } from "./middleware/validate.middleware";
@@ -11,7 +12,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morganMiddleware);
 app.use(helmet());
-app.use(validateImage);
 
 app.get("/", (req, res) => {
   const uptime = process.uptime();
@@ -23,7 +23,12 @@ app.get("/", (req, res) => {
   res.json(data);
 });
 
-app.use("/api/v1/image", compressionRouter);
+app.use(
+  "/api/v1/image",
+  upload.single("image"),
+  validateImage,
+  compressionRouter
+);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
