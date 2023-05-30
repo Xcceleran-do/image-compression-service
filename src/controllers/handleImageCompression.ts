@@ -5,13 +5,23 @@ import { generateImageLocation } from "../utils/generateImageLocation";
 
 export const handleImageCompression = async (req: Request, res: Response) => {
   const image = req.file!;
+  const { quality } = req.query;
   const imageExtension = image?.mimetype.split("/")[1];
   const compressedImageLocation = generateImageLocation(imageExtension!);
+  console.log(quality);
+  if (
+    typeof quality !== "undefined" &&
+    (isNaN(Number(quality)) || Number(quality) < 1 || Number(quality) > 100)
+  ) {
+    return res
+      .status(400)
+      .json({ message: "Quality param should range from 1 to 100 " });
+  }
 
   try {
     await compressImage({
       image,
-      quality: 80,
+      quality: quality ? Number(quality) : 80,
       location: compressedImageLocation,
     });
 
@@ -20,7 +30,7 @@ export const handleImageCompression = async (req: Request, res: Response) => {
         console.log(err);
       }
     });
-    // todo send the data to s3 bucket , and then delete the compressed image from the server
+
     res.sendFile(compressedImageLocation);
   } catch (error) {
     console.log(error);
