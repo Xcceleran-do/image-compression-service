@@ -5,15 +5,21 @@ import { generateImageLocation } from "../utils/generateImageLocation";
 
 export const handleImageResize = async (req: Request, res: Response) => {
   const image = req.file!;
-  const { width, height } = req.body;
+  const { width, height } = req.query;
   const imageExtension = image?.mimetype.split("/")[1];
   const resizedImageLocation = generateImageLocation(imageExtension!);
+
+  if (!width || !height || isNaN(Number(width)) || isNaN(Number(height))) {
+    return res.status(400).json({ message: "Please provide width and height" });
+  }
+
+  const [widthVal, heightVal] = [Number(width), Number(height)];
 
   try {
     await resizeImage({
       image,
-      width: 1800,
-      height: 600,
+      width: widthVal,
+      height: heightVal,
       location: resizedImageLocation,
     });
 
