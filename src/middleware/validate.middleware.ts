@@ -7,7 +7,9 @@ export const validateImage = (
 ) => {
   const image = req.file;
 
-  // make sure the file extension is jpeg
+  if (!image)
+    return res.status(400).json({ message: "Please upload an image" });
+
   if (req.file?.mimetype.startsWith("image")) {
     return res.status(400).json({ message: "Only image formats are allowed" });
   }

@@ -1,24 +1,13 @@
 import { Request, Response } from "express";
-import path from "path";
 import fs from "fs";
 import { compressImage } from "../utils/compressImage";
+import { generateImageLocation } from "../utils/generateImageLocation";
 
 export const handleImageCompression = async (req: Request, res: Response) => {
-  // todo get the quality from the request body
+  const image = req.file!;
+  const imageExtension = image?.mimetype.split("/")[1];
+  const compressedImageLocation = generateImageLocation(imageExtension!);
 
-  // make sure the file extension is jpeg
-  if (req.file?.mimetype !== "image/jpeg") {
-    return res.status(400).json({ message: "Only jpeg images are allowed" });
-  }
-
-  const image = req.file;
-  const compressedImageLocation = path.join(
-    __dirname,
-    "..",
-    "..",
-    "uploads",
-    `image${Math.floor(Math.random() * 10000)}.jpeg`
-  );
   try {
     await compressImage({
       image,
@@ -26,7 +15,6 @@ export const handleImageCompression = async (req: Request, res: Response) => {
       location: compressedImageLocation,
     });
 
-    // delete the original image
     fs.unlink(image?.path, (err) => {
       if (err) {
         console.log(err);
