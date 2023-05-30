@@ -10,7 +10,10 @@ export const validateImage = (
     return res.status(400).json({ message: "Please upload an image" });
 
   if (!image?.mimetype.startsWith("image/")) {
-    return res.status(400).json({ message: "Only image formats are allowed" });
+    return res.status(400).json({
+      message:
+        "Only image formats are allowed (webp, png, tiff, jpeg, avif, heif, raw)",
+    });
   }
 
   const validExtensions = [
