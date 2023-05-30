@@ -6,11 +6,10 @@ export const validateImage = (
   next: NextFunction
 ) => {
   const image = req.file;
-
   if (!image)
     return res.status(400).json({ message: "Please upload an image" });
 
-  if (req.file?.mimetype.startsWith("image")) {
+  if (!image?.mimetype.startsWith("image/")) {
     return res.status(400).json({ message: "Only image formats are allowed" });
   }
 
