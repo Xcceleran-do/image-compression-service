@@ -3,7 +3,7 @@ import helmet from "helmet";
 
 import compressionRouter from "./routes/compressImageRoutes";
 import morganMiddleware from "./middleware/morgan.middleware";
-
+import { validateImage } from "./middleware/validate.middleware";
 const app = express();
 const port = 5000;
 
@@ -11,6 +11,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morganMiddleware);
 app.use(helmet());
+app.use(validateImage);
 
 app.get("/", (req, res) => {
   const uptime = process.uptime();
