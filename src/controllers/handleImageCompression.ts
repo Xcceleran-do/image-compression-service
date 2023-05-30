@@ -8,7 +8,7 @@ export const handleImageCompression = async (req: Request, res: Response) => {
   const { quality } = req.query;
   const imageExtension = image?.mimetype.split("/")[1];
   const compressedImageLocation = generateImageLocation(imageExtension!);
-  console.log(quality);
+
   if (
     typeof quality !== "undefined" &&
     (isNaN(Number(quality)) || Number(quality) < 1 || Number(quality) > 100)
