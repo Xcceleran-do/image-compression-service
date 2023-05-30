@@ -9,3 +9,8 @@ export interface ResizeData {
   height: number;
   location: string;
 }
+export interface ConvertData {
+  image: Express.Multer.File | undefined;
+  type: "webp" | "png" | "tiff" | "jpeg" | "avif" | "heif" | "raw";
+  location: string;
+}
