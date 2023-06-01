@@ -5,8 +5,8 @@ This is a TypeScript, Node.js, and Express.js project that focuses on image mani
 ## Features
 
 - Image Compression: Compresses images to reduce file size.✅
-- Image Type Conversion: Converts image types (e.g., JPG) to WebP format.👷
-- Image Resizing: Resizes images by adjusting their height and width.👷
+- Image Type Conversion: Converts image types (e.g., JPG) to WebP format.✅
+- Image Resizing: Resizes images by adjusting their height and width.✅
 
 ## Installation
 
