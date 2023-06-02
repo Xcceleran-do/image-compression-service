@@ -1,15 +1,12 @@
 import sharp from "sharp";
 import { CompressionData } from "../types";
+import { parentPort } from "worker_threads";
 
-export const compressImage = async ({
-  image,
-  quality,
-  location,
-}: CompressionData) => {
-  // doc: https://sharp.pixelplumbing.com/api-output#jpeg
+const compressImage = async ({ image, location, quality }: CompressionData) => {
   const compressedImage = await sharp(image?.path)
     .jpeg({ quality: quality })
     .toFile(location);
-
-  return compressedImage;
+  parentPort?.postMessage(compressedImage);
 };
+
+parentPort?.on("message", (message) => compressImage(message));
