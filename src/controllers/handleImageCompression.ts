@@ -3,6 +3,7 @@ import fs from "fs";
 import { Worker } from "worker_threads";
 import { generateImageLocation } from "../utils/generateImageLocation";
 import path from "path";
+
 export const handleImageCompression = async (req: Request, res: Response) => {
   const image = req.file!;
   const { quality } = req.query;
@@ -14,6 +15,7 @@ export const handleImageCompression = async (req: Request, res: Response) => {
     "utils",
     "compressImage.ts"
   );
+
   if (
     typeof quality !== "undefined" &&
     (isNaN(Number(quality)) || Number(quality) < 1 || Number(quality) > 100)
@@ -23,6 +25,7 @@ export const handleImageCompression = async (req: Request, res: Response) => {
       .json({ message: "Quality param should range from 1 to 100 " });
   }
 
+  // new worker thread is created and the compressImageLocation is passed to it
   const worker = new Worker(compressImageLocation);
 
   worker.postMessage({
@@ -33,6 +36,11 @@ export const handleImageCompression = async (req: Request, res: Response) => {
 
   worker.on("message", (message) => {
     res.sendFile(compressedImageLocation);
+    fs.unlink(image?.path, (err) => {
+      if (err) {
+        console.log(err);
+      }
+    });
   });
 
   worker.on("error", (err) => {
@@ -40,13 +48,6 @@ export const handleImageCompression = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Something went wrong" });
   });
 
-  worker.on("exit", () => {
-    fs.unlink(image?.path, (err) => {
-      if (err) {
-        console.log(err);
-      }
-    });
-  });
   worker.on("messageerror", (err) => {
     res.status(500).json({ message: "Something went wrong" });
   });
