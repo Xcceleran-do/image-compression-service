@@ -3,6 +3,7 @@ import fs from "fs";
 import { Worker } from "worker_threads";
 import { generateImageLocation } from "../utils/generateImageLocation";
 import path from "path";
+import { orphanedImages } from "../state";
 
 export const handleImageCompression = async (req: Request, res: Response) => {
   const image = req.file!;
@@ -41,6 +42,7 @@ export const handleImageCompression = async (req: Request, res: Response) => {
         console.log(err);
       }
     });
+    orphanedImages.push(compressedImageLocation);
   });
 
   worker.on("error", (err) => {
