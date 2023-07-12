@@ -5,7 +5,10 @@ import { upload } from "./config/multer";
 import compressionRouter from "./routes/compressImageRoutes";
 import morganMiddleware from "./middleware/morgan.middleware";
 import { validateImage } from "./middleware/validate.middleware";
+import { removeOldImage } from "./jobs/removeOldImage";
+
 const app = express();
+removeOldImage();
 const port = 5000;
 
 app.use(express.json());
